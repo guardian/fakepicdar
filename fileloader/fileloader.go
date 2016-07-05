@@ -39,9 +39,7 @@ func filterXMLFiles(inFiles []os.FileInfo) (outFiles []os.FileInfo) {
 	return outFiles
 }
 
-func GetRecords(baseDir string, startRange int, endRange int) (record []schema.Record) {
-	len := endRange - startRange
-	records := make([]schema.Record, len)
+func GetRecords(baseDir string, startRange int, endRange int) (records []schema.Record) {
 	xmlDir := baseDir + "/xmls"
 
 	files, err := ioutil.ReadDir(xmlDir)
