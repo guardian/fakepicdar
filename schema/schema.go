@@ -20,7 +20,7 @@ type Field struct {
 type Record struct {
 	XMLName xml.Name `xml.Record`
 	MMRef   string
-	Field   string
+	Field   []Field
 	VURL    []string
 }
 
