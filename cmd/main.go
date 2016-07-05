@@ -69,6 +69,8 @@ func serveQuery(w http.ResponseWriter, r *http.Request) {
 			responseXml = &schema.MogulResponse{
 				Response:     schema.Response{MAK: "fake", Result: "OK"},
 				ResponseData: schema.ResponseData{Match: records}}
+		case "SearchClose":
+			fmt.Println("\n--++Closing Search")
 		default:
 			fmt.Println("\n!!--++Unrecognised ActionType.")
 			return
