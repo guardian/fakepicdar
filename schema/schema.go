@@ -15,6 +15,7 @@ type Field struct {
 	XMLName xml.Name `xml.Field`
 	Name    string   `xml:"name,attr"`
 	Type    string   `xml:"type,attr"`
+	Value   string   `xml:",chardata"`
 }
 
 type Record struct {
