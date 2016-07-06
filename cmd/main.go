@@ -19,7 +19,7 @@ func main() {
 	flag.StringVar(&baseDir, "basedir", ".", "base dir of picdar images/responses")
 	flag.Parse()
 
-	fs := http.FileServer(http.Dir("images"))
+	fs := http.FileServer(http.Dir(baseDir + "/images"))
 	http.Handle("/images/", http.StripPrefix("/images/", fs))
 	http.HandleFunc("/", serveQuery)
 
@@ -65,10 +65,16 @@ func serveQuery(w http.ResponseWriter, r *http.Request) {
 				ResponseData: schema.ResponseData{MatchCount: "5", SearchID: "0"}}
 		case "RetrieveResults":
 			fmt.Println("\n--++Faking Results.")
-			records := fileloader.GetRecords(baseDir, 0, 10)
+			records := fileloader.GetAllRecords(baseDir)
 			responseXml = &schema.MogulResponse{
 				Response:     schema.Response{MAK: "fake", Result: "OK"},
 				ResponseData: schema.ResponseData{Match: records}}
+		case "RetrieveAssetData":
+			fmt.Println("\n--++Sending asset response.")
+			record := fileloader.GetRecord(baseDir, v.ActionData.MMRef)
+			responseXml = &schema.MogulResponse{
+				Response:     schema.Response{MAK: "fake", Result: "OK"},
+				ResponseData: schema.ResponseData{Record: record}}
 		case "SearchClose":
 			fmt.Println("\n--++Closing Search")
 		default:

@@ -39,7 +39,11 @@ func filterXMLFiles(inFiles []os.FileInfo) (outFiles []os.FileInfo) {
 	return outFiles
 }
 
-func GetRecords(baseDir string, startRange int, endRange int) (records []schema.Record) {
+func xmlDir(baseDir string) (xmlDirectory string) {
+	return baseDir + "/xmls"
+}
+
+func getXMLFiles(baseDir string) (xmlFiles []os.FileInfo) {
 	xmlDir := baseDir + "/xmls"
 
 	files, err := ioutil.ReadDir(xmlDir)
@@ -47,18 +51,39 @@ func GetRecords(baseDir string, startRange int, endRange int) (records []schema.
 		log.Fatal(err)
 	}
 
-	xmlFiles := filterXMLFiles(files)
-	currentSlice := xmlFiles[startRange:endRange]
+	return filterXMLFiles(files)
+}
 
-	for _, file := range currentSlice {
-		filename := xmlDir + "/" + file.Name()
-
-		fmt.Printf("\nLoading %s\n", filename)
-
-		response := ReadResponse(filename)
-
-		records = append(records, response)
+func getRecordsFromFiles(baseDir string, inFiles []os.FileInfo) (records []schema.Record) {
+	for _, file := range inFiles {
+		records = append(records, getRecordFromFile(baseDir, file.Name()))
 	}
 
 	return records
+}
+
+func getRecordFromFile(baseDir string, filename string) (record schema.Record) {
+	filename = xmlDir(baseDir) + "/" + filename
+	fmt.Printf("\nLoading %s\n", filename)
+
+	return ReadResponse(filename)
+}
+
+func GetAllRecords(baseDir string) (records []schema.Record) {
+	xmlFiles := getXMLFiles(baseDir)
+
+	return getRecordsFromFiles(baseDir, xmlFiles)
+}
+
+func GetRecord(baseDir string, key string) (record schema.Record) {
+	filename := key + ".xml"
+
+	return getRecordFromFile(baseDir, filename)
+}
+
+func GetRecords(baseDir string, startRange int, endRange int) (records []schema.Record) {
+	xmlFiles := getXMLFiles(baseDir)
+	currentSlice := xmlFiles[startRange:endRange]
+
+	return getRecordsFromFiles(baseDir, currentSlice)
 }

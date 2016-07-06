@@ -43,6 +43,7 @@ type ActionType string
 
 type ActionData struct {
 	UserName, Password string
+	MMRef              string
 }
 
 type MogulAction struct {
